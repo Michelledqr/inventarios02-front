@@ -34,15 +34,11 @@ export const InventarioView = () => {
           return <InventarioCard linea={linea}  key={linea._id}/>
         })}
       </div>
-      { agregarItem ?
-          <InventarioAdd  closeOption={handleOnCLickAgregarItem}/>
-        : 
-          <button className="btn btn-primary fab" onClick={handleOnCLickAgregarItem}>
+      { agregarItem ?  <InventarioAdd  closeOption={handleOnCLickAgregarItem} listarInventarios={listarInventarios} /> : 
+          (<button className="btn btn-primary fab" onClick={handleOnCLickAgregarItem}>
             <i className="fa-solid fa-plus"></i>
-          </button>
+          </button>)
       }
-
-
     </div>
   )
 }

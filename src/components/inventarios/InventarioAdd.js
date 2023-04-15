@@ -4,8 +4,9 @@ import {getMarcas} from '../../services/marcaService';
 import {getTiposEquipo} from '../../services/tipoEquipoService';
 import {getUsuarios} from '../../services/usuarioService';
 import {postInventario} from '../../services/inventarioService';
+import Swal from 'sweetalert2';
 
-export const InventarioAdd = ({closeOption}) => {
+export const InventarioAdd = ({closeOption, listarInventarios}) => {
     /**  ----------------------------------------------- consulta de listas para seleccion en formulario*/
 
     const [usuarios, setUsuarios] = useState([])
@@ -46,26 +47,36 @@ export const InventarioAdd = ({closeOption}) => {
  
     const [contFormulario, setcontFormulario] = useState({});
     const { serial='', modelo='', descripcion='', color='', imagen='', fechaCompra='', precio='', usuario ='', marca='',tipo='', estado=''} = contFormulario;
+    const [openModal, setOpenModal ] = useState (false);
 
     const handleOnChange = ({ target }) =>{
         const {name, value} = target;
         setcontFormulario({...contFormulario, [name]: value});
     }
 
-    const handleOnsubmit = async (e)=>{
+    const handleOpenModal = () => {
+        setOpenModal(!openModal);
+    }
+
+    const handleOnsubmit = async (e)=> {
         e.preventDefault();
         const inventario = {
             serial, modelo, descripcion, color, imagen, fechaCompra, precio, 
             usuario:{_id: usuario}, marca:{_id: marca}, 
             tipoEquipo: { _id: tipo}, estadoEquipo: {_id: estado}
         }
+ 
         console.log(inventario);
-
         try{
+            Swal.showLoading();
             const {data} = await postInventario(inventario);
             console.log(data);
+            Swal.close();
+            handleOpenModal();
         }catch (error){
             console.log(error);
+            Swal.close();
+            listarInventarios();
         }
     }
 
